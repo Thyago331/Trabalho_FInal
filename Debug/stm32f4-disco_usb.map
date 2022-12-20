@@ -6867,20 +6867,20 @@ LOAD c:/st/stm32cubeide_1.10.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .text.CDC_Transmit_FS
                 0x000000000800b390       0x5c ./USB_DEVICE/App/usbd_cdc_if.o
                 0x000000000800b390                CDC_Transmit_FS
- .text.CDC_Receiveq_FS
-                0x000000000800b3ec       0x2c ./USB_DEVICE/App/usbd_cdc_if.o
-                0x000000000800b3ec                CDC_Receiveq_FS
- .text.queue_print
-                0x000000000800b418       0x4c ./USB_DEVICE/App/usbd_cdc_if.o
-                0x000000000800b418                queue_print
- .text.Print_Task
-                0x000000000800b464       0x4c ./USB_DEVICE/App/usbd_cdc_if.o
-                0x000000000800b464                Print_Task
  .text.CDC_TransmitCplt_FS
-                0x000000000800b4b0       0x50 ./USB_DEVICE/App/usbd_cdc_if.o
+                0x000000000800b3ec       0x50 ./USB_DEVICE/App/usbd_cdc_if.o
  .text.init_usb_rtos_obj
-                0x000000000800b500       0x84 ./USB_DEVICE/App/usbd_cdc_if.o
-                0x000000000800b500                init_usb_rtos_obj
+                0x000000000800b43c       0x84 ./USB_DEVICE/App/usbd_cdc_if.o
+                0x000000000800b43c                init_usb_rtos_obj
+ .text.CDC_Receiveq_FS
+                0x000000000800b4c0       0x2c ./USB_DEVICE/App/usbd_cdc_if.o
+                0x000000000800b4c0                CDC_Receiveq_FS
+ .text.queue_print
+                0x000000000800b4ec       0x4c ./USB_DEVICE/App/usbd_cdc_if.o
+                0x000000000800b4ec                queue_print
+ .text.Print_Task
+                0x000000000800b538       0x4c ./USB_DEVICE/App/usbd_cdc_if.o
+                0x000000000800b538                Print_Task
  .text.USBD_FS_DeviceDescriptor
                 0x000000000800b584       0x24 ./USB_DEVICE/App/usbd_desc.o
                 0x000000000800b584                USBD_FS_DeviceDescriptor
@@ -7849,7 +7849,7 @@ LOAD c:/st/stm32cubeide_1.10.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x000000000000880f       0x1c ./USB_DEVICE/App/usbd_desc.o
  .debug_macro   0x000000000000882b      0x412 ./USB_DEVICE/Target/usbd_conf.o
 
-.debug_line     0x0000000000000000    0x1e9af
+.debug_line     0x0000000000000000    0x1e9b2
  .debug_line    0x0000000000000000      0x855 ./Core/Src/FreeRTOS_CLI.o
  .debug_line    0x0000000000000855      0xd4e ./Core/Src/main.o
  .debug_line    0x00000000000015a3      0x6eb ./Core/Src/stm32f4xx_hal_msp.o
@@ -7880,9 +7880,9 @@ LOAD c:/st/stm32cubeide_1.10.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x000000000001a749      0x8cf ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
  .debug_line    0x000000000001b018      0x932 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
  .debug_line    0x000000000001b94a      0xa4b ./USB_DEVICE/App/usb_device.o
- .debug_line    0x000000000001c395      0xccb ./USB_DEVICE/App/usbd_cdc_if.o
- .debug_line    0x000000000001d060      0xb14 ./USB_DEVICE/App/usbd_desc.o
- .debug_line    0x000000000001db74      0xe3b ./USB_DEVICE/Target/usbd_conf.o
+ .debug_line    0x000000000001c395      0xcce ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_line    0x000000000001d063      0xb14 ./USB_DEVICE/App/usbd_desc.o
+ .debug_line    0x000000000001db77      0xe3b ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_str      0x0000000000000000    0xd90eb
  .debug_str     0x0000000000000000     0xacd7 ./Core/Src/FreeRTOS_CLI.o

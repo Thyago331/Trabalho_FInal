@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00008c3d  00000000  00000000  00049450  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0001e9af  00000000  00000000  0005208d  2**0
+ 18 .debug_line   0001e9b2  00000000  00000000  0005208d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000d90eb  00000000  00000000  00070a3c  2**0
+ 19 .debug_str    000d90eb  00000000  00000000  00070a3f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  00149b27  2**0
+ 20 .comment      00000050  00000000  00000000  00149b2a  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  0000733c  00000000  00000000  00149b78  2**2
+ 21 .debug_frame  0000733c  00000000  00000000  00149b7c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1265,7 +1265,7 @@ void StartDefaultTask(void *argument)
  80009c8:	f00a fc08 	bl	800b1dc <MX_USB_DEVICE_Init>
   /* USER CODE BEGIN 5 */
   init_usb_rtos_obj();
- 80009cc:	f00a fd98 	bl	800b500 <init_usb_rtos_obj>
+ 80009cc:	f00a fd36 	bl	800b43c <init_usb_rtos_obj>
   //char data[32];
 	int qtd;
   /* Infinite loop */
@@ -1295,7 +1295,7 @@ void StartDefaultTask(void *argument)
  80009ee:	4603      	mov	r3, r0
  80009f0:	4619      	mov	r1, r3
  80009f2:	4620      	mov	r0, r4
- 80009f4:	f00a fd10 	bl	800b418 <queue_print>
+ 80009f4:	f00a fd7a 	bl	800b4ec <queue_print>
 
 	    for( ;; )
 	    {
@@ -1306,7 +1306,7 @@ void StartDefaultTask(void *argument)
  80009fc:	f04f 32ff 	mov.w	r2, #4294967295
  8000a00:	2101      	movs	r1, #1
  8000a02:	4618      	mov	r0, r3
- 8000a04:	f00a fcf2 	bl	800b3ec <CDC_Receiveq_FS>
+ 8000a04:	f00a fd5c 	bl	800b4c0 <CDC_Receiveq_FS>
 	        //FreeRTOS_read( xConsole, &data, sizeof( data ) );
 
 	        if( data == '\r' )
@@ -1320,7 +1320,7 @@ void StartDefaultTask(void *argument)
 				(void)queue_print("\r\n", strlen( "\r\n" ));//write
  8000a0e:	2102      	movs	r1, #2
  8000a10:	4827      	ldr	r0, [pc, #156]	; (8000ab0 <StartDefaultTask+0xf0>)
- 8000a12:	f00a fd01 	bl	800b418 <queue_print>
+ 8000a12:	f00a fd6b 	bl	800b4ec <queue_print>
 	            do
 	            {
 	                /* Send the command string to the command interpreter.  Any
@@ -1343,7 +1343,7 @@ void StartDefaultTask(void *argument)
  8000a28:	4603      	mov	r3, r0
  8000a2a:	4619      	mov	r1, r3
  8000a2c:	4821      	ldr	r0, [pc, #132]	; (8000ab4 <StartDefaultTask+0xf4>)
- 8000a2e:	f00a fcf3 	bl	800b418 <queue_print>
+ 8000a2e:	f00a fd5d 	bl	800b4ec <queue_print>
 	                //FreeRTOS_write( xConsole, pcOutputString, strlen( pcOutputString ) );
 
 	            } while( xMoreDataToFollow != pdFALSE );
@@ -1425,7 +1425,7 @@ void StartDefaultTask(void *argument)
  8000a94:	f107 030f 	add.w	r3, r7, #15
  8000a98:	2101      	movs	r1, #1
  8000a9a:	4618      	mov	r0, r3
- 8000a9c:	f00a fcbc 	bl	800b418 <queue_print>
+ 8000a9c:	f00a fd26 	bl	800b4ec <queue_print>
 	    {
  8000aa0:	e7aa      	b.n	80009f8 <StartDefaultTask+0x38>
  8000aa2:	bf00      	nop
@@ -31321,28 +31321,28 @@ void MX_USB_DEVICE_Init(void)
  800b238:	200000a8 	.word	0x200000a8
 
 0800b23c <CDC_Init_FS>:
+/* Private functions ---------------------------------------------------------*/
 /**
-  * @brief  Initializes the CDC media low layer over the FS USB IP
-  * @retval USBD_OK if all operations are OK else USBD_FAIL
-  */
-static int8_t CDC_Init_FS(void)
-{
+ * @brief  Initializes the CDC media low layer over the FS USB IP
+ * @retval USBD_OK if all operations are OK else USBD_FAIL
+ */
+static int8_t CDC_Init_FS(void) {
  800b23c:	b580      	push	{r7, lr}
  800b23e:	af00      	add	r7, sp, #0
-  /* USER CODE BEGIN 3 */
-  /* Set Application Buffers */
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
+	/* USER CODE BEGIN 3 */
+	/* Set Application Buffers */
+	USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
  800b240:	2200      	movs	r2, #0
  800b242:	4905      	ldr	r1, [pc, #20]	; (800b258 <CDC_Init_FS+0x1c>)
  800b244:	4805      	ldr	r0, [pc, #20]	; (800b25c <CDC_Init_FS+0x20>)
  800b246:	f7fa fabb 	bl	80057c0 <USBD_CDC_SetTxBuffer>
-  USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
+	USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
  800b24a:	4905      	ldr	r1, [pc, #20]	; (800b260 <CDC_Init_FS+0x24>)
  800b24c:	4803      	ldr	r0, [pc, #12]	; (800b25c <CDC_Init_FS+0x20>)
  800b24e:	f7fa fad9 	bl	8005804 <USBD_CDC_SetRxBuffer>
-  return (USBD_OK);
+	return (USBD_OK);
  800b252:	2300      	movs	r3, #0
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
  800b254:	4618      	mov	r0, r3
  800b256:	bd80      	pop	{r7, pc}
@@ -31351,18 +31351,18 @@ static int8_t CDC_Init_FS(void)
  800b260:	20009380 	.word	0x20009380
 
 0800b264 <CDC_DeInit_FS>:
+
 /**
-  * @brief  DeInitializes the CDC media low layer
-  * @retval USBD_OK if all operations are OK else USBD_FAIL
-  */
-static int8_t CDC_DeInit_FS(void)
-{
+ * @brief  DeInitializes the CDC media low layer
+ * @retval USBD_OK if all operations are OK else USBD_FAIL
+ */
+static int8_t CDC_DeInit_FS(void) {
  800b264:	b480      	push	{r7}
  800b266:	af00      	add	r7, sp, #0
-  /* USER CODE BEGIN 4 */
-  return (USBD_OK);
+	/* USER CODE BEGIN 4 */
+	return (USBD_OK);
  800b268:	2300      	movs	r3, #0
-  /* USER CODE END 4 */
+	/* USER CODE END 4 */
 }
  800b26a:	4618      	mov	r0, r3
  800b26c:	46bd      	mov	sp, r7
@@ -31370,12 +31370,12 @@ static int8_t CDC_DeInit_FS(void)
  800b272:	4770      	bx	lr
 
 0800b274 <CDC_Control_FS>:
-  * @param  pbuf: Buffer containing command data (request parameters)
-  * @param  length: Number of data to be sent (in bytes)
-  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
-  */
-static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
-{
+ * @param  cmd: Command code
+ * @param  pbuf: Buffer containing command data (request parameters)
+ * @param  length: Number of data to be sent (in bytes)
+ * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
+ */
+static int8_t CDC_Control_FS(uint8_t cmd, uint8_t *pbuf, uint16_t length) {
  800b274:	b480      	push	{r7}
  800b276:	b083      	sub	sp, #12
  800b278:	af00      	add	r7, sp, #0
@@ -31384,8 +31384,8 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
  800b27e:	71fb      	strb	r3, [r7, #7]
  800b280:	4613      	mov	r3, r2
  800b282:	80bb      	strh	r3, [r7, #4]
-  /* USER CODE BEGIN 5 */
-  switch(cmd)
+	/* USER CODE BEGIN 5 */
+	switch (cmd) {
  800b284:	79fb      	ldrb	r3, [r7, #7]
  800b286:	2b23      	cmp	r3, #35	; 0x23
  800b288:	d84a      	bhi.n	800b320 <CDC_Control_FS+0xac>
@@ -31427,18 +31427,18 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
  800b314:	0800b321 	.word	0x0800b321
  800b318:	0800b321 	.word	0x0800b321
  800b31c:	0800b321 	.word	0x0800b321
-    case CDC_SEND_BREAK:
+	case CDC_SEND_BREAK:
 
-    break;
+		break;
 
-  default:
-    break;
+	default:
+		break;
  800b320:	bf00      	nop
-  }
+	}
 
-  return (USBD_OK);
+	return (USBD_OK);
  800b322:	2300      	movs	r3, #0
-  /* USER CODE END 5 */
+	/* USER CODE END 5 */
 }
  800b324:	4618      	mov	r0, r3
  800b326:	370c      	adds	r7, #12
@@ -31447,12 +31447,12 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
  800b32e:	4770      	bx	lr
 
 0800b330 <CDC_Receive_FS>:
-  */
-  /* USER CODE BEGIN 6 */
+ * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
+ */
+/* USER CODE BEGIN 6 */
 void Print_Task(void *param);
 //void queue_print(char* data, int size);
-static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
-	{
+static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len) {
  800b330:	b580      	push	{r7, lr}
  800b332:	b084      	sub	sp, #16
  800b334:	af00      	add	r7, sp, #0
@@ -31461,26 +31461,26 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 	portBASE_TYPE yield = pdFALSE;
  800b33a:	2300      	movs	r3, #0
  800b33c:	60bb      	str	r3, [r7, #8]
-  USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
+	USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
  800b33e:	6879      	ldr	r1, [r7, #4]
  800b340:	4810      	ldr	r0, [pc, #64]	; (800b384 <CDC_Receive_FS+0x54>)
  800b342:	f7fa fa5f 	bl	8005804 <USBD_CDC_SetRxBuffer>
-  USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+	USBD_CDC_ReceivePacket(&hUsbDeviceFS);
  800b346:	480f      	ldr	r0, [pc, #60]	; (800b384 <CDC_Receive_FS+0x54>)
  800b348:	f7fa fac0 	bl	80058cc <USBD_CDC_ReceivePacket>
 
-  uint32_t len = *Len;
+	uint32_t len = *Len;
  800b34c:	683b      	ldr	r3, [r7, #0]
  800b34e:	681b      	ldr	r3, [r3, #0]
  800b350:	60fb      	str	r3, [r7, #12]
-  xMessageBufferSendFromISR(rMessageBuffer, Buf, len, &yield);
+	xMessageBufferSendFromISR(rMessageBuffer, Buf, len, &yield);
  800b352:	4b0d      	ldr	r3, [pc, #52]	; (800b388 <CDC_Receive_FS+0x58>)
  800b354:	6818      	ldr	r0, [r3, #0]
  800b356:	f107 0308 	add.w	r3, r7, #8
  800b35a:	68fa      	ldr	r2, [r7, #12]
  800b35c:	6879      	ldr	r1, [r7, #4]
  800b35e:	f7fd f830 	bl	80083c2 <xStreamBufferSendFromISR>
-  portYIELD_FROM_ISR(yield);
+	portYIELD_FROM_ISR(yield);
  800b362:	68bb      	ldr	r3, [r7, #8]
  800b364:	2b00      	cmp	r3, #0
  800b366:	d007      	beq.n	800b378 <CDC_Receive_FS+0x48>
@@ -31489,9 +31489,9 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
  800b36e:	601a      	str	r2, [r3, #0]
  800b370:	f3bf 8f4f 	dsb	sy
  800b374:	f3bf 8f6f 	isb	sy
-  return (USBD_OK);
+	return (USBD_OK);
  800b378:	2300      	movs	r3, #0
-	}
+}
  800b37a:	4618      	mov	r0, r3
  800b37c:	3710      	adds	r7, #16
  800b37e:	46bd      	mov	sp, r7
@@ -31502,282 +31502,292 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
  800b38c:	e000ed04 	.word	0xe000ed04
 
 0800b390 <CDC_Transmit_FS>:
-  * @param  Buf: Buffer of data to be sent
-  * @param  Len: Number of data to be sent (in bytes)
-  * @retval USBD_OK if all operations are OK else USBD_FAIL or USBD_BUSY
-  */
-uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
-{
+ *
+ * @param  Buf: Buffer of data to be sent
+ * @param  Len: Number of data to be sent (in bytes)
+ * @retval USBD_OK if all operations are OK else USBD_FAIL or USBD_BUSY
+ */
+uint8_t CDC_Transmit_FS(uint8_t *Buf, uint16_t Len) {
  800b390:	b580      	push	{r7, lr}
  800b392:	b084      	sub	sp, #16
  800b394:	af00      	add	r7, sp, #0
  800b396:	6078      	str	r0, [r7, #4]
  800b398:	460b      	mov	r3, r1
  800b39a:	807b      	strh	r3, [r7, #2]
-  uint8_t result = USBD_OK;
+	uint8_t result = USBD_OK;
  800b39c:	2300      	movs	r3, #0
  800b39e:	73fb      	strb	r3, [r7, #15]
-  /* USER CODE BEGIN 7 */
-  //if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE){
-	  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+	/* USER CODE BEGIN 7 */
+	//if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE){
+	USBD_CDC_HandleTypeDef *hcdc =
  800b3a0:	4b10      	ldr	r3, [pc, #64]	; (800b3e4 <CDC_Transmit_FS+0x54>)
  800b3a2:	f8d3 32bc 	ldr.w	r3, [r3, #700]	; 0x2bc
  800b3a6:	60bb      	str	r3, [r7, #8]
-	  if (hcdc->TxState != 0){
+			(USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData;
+	if (hcdc->TxState != 0) {
  800b3a8:	68bb      	ldr	r3, [r7, #8]
  800b3aa:	f8d3 3214 	ldr.w	r3, [r3, #532]	; 0x214
  800b3ae:	2b00      	cmp	r3, #0
  800b3b0:	d001      	beq.n	800b3b6 <CDC_Transmit_FS+0x26>
-	//	xSemaphoreGive(mutex_usb);
+		//	xSemaphoreGive(mutex_usb);
 		return USBD_BUSY;
  800b3b2:	2301      	movs	r3, #1
- 800b3b4:	e011      	b.n	800b3da <CDC_Transmit_FS+0x4a>
-	  }
-	  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
+ 800b3b4:	e012      	b.n	800b3dc <CDC_Transmit_FS+0x4c>
+	}
+	USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
  800b3b6:	887b      	ldrh	r3, [r7, #2]
  800b3b8:	461a      	mov	r2, r3
  800b3ba:	6879      	ldr	r1, [r7, #4]
  800b3bc:	4809      	ldr	r0, [pc, #36]	; (800b3e4 <CDC_Transmit_FS+0x54>)
  800b3be:	f7fa f9ff 	bl	80057c0 <USBD_CDC_SetTxBuffer>
-	  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+	result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
  800b3c2:	4808      	ldr	r0, [pc, #32]	; (800b3e4 <CDC_Transmit_FS+0x54>)
  800b3c4:	f7fa fa3c 	bl	8005840 <USBD_CDC_TransmitPacket>
  800b3c8:	4603      	mov	r3, r0
  800b3ca:	73fb      	strb	r3, [r7, #15]
-	  xSemaphoreTake(sem_usb_tx, portMAX_DELAY);
+	xSemaphoreTake(sem_usb_tx, portMAX_DELAY);
  800b3cc:	4b06      	ldr	r3, [pc, #24]	; (800b3e8 <CDC_Transmit_FS+0x58>)
  800b3ce:	681b      	ldr	r3, [r3, #0]
  800b3d0:	f04f 31ff 	mov.w	r1, #4294967295
  800b3d4:	4618      	mov	r0, r3
  800b3d6:	f7fc fc1f 	bl	8007c18 <xQueueSemaphoreTake>
-  //}
+	//}
+
+	/* USER CODE END 7 */
+	return result;
+ 800b3da:	7bfb      	ldrb	r3, [r7, #15]
 }
- 800b3da:	4618      	mov	r0, r3
- 800b3dc:	3710      	adds	r7, #16
- 800b3de:	46bd      	mov	sp, r7
- 800b3e0:	bd80      	pop	{r7, pc}
- 800b3e2:	bf00      	nop
+ 800b3dc:	4618      	mov	r0, r3
+ 800b3de:	3710      	adds	r7, #16
+ 800b3e0:	46bd      	mov	sp, r7
+ 800b3e2:	bd80      	pop	{r7, pc}
  800b3e4:	20009094 	.word	0x20009094
  800b3e8:	20009378 	.word	0x20009378
 
-0800b3ec <CDC_Receiveq_FS>:
-
- BaseType_t CDC_Receiveq_FS(char* data, int size, TickType_t timeout){
+0800b3ec <CDC_TransmitCplt_FS>:
+ *
+ * @param  Buf: Buffer of data to be received
+ * @param  Len: Number of data received (in bytes)
+ * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
+ */
+static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
  800b3ec:	b580      	push	{r7, lr}
- 800b3ee:	b084      	sub	sp, #16
+ 800b3ee:	b086      	sub	sp, #24
  800b3f0:	af00      	add	r7, sp, #0
  800b3f2:	60f8      	str	r0, [r7, #12]
  800b3f4:	60b9      	str	r1, [r7, #8]
- 800b3f6:	607a      	str	r2, [r7, #4]
-	  return xMessageBufferReceive(rMessageBuffer, (void *)data, size ,portMAX_DELAY);
- 800b3f8:	4b06      	ldr	r3, [pc, #24]	; (800b414 <CDC_Receiveq_FS+0x28>)
- 800b3fa:	6818      	ldr	r0, [r3, #0]
- 800b3fc:	68ba      	ldr	r2, [r7, #8]
- 800b3fe:	f04f 33ff 	mov.w	r3, #4294967295
- 800b402:	68f9      	ldr	r1, [r7, #12]
- 800b404:	f7fd f88b 	bl	800851e <xStreamBufferReceive>
- 800b408:	4603      	mov	r3, r0
-
-  }
- 800b40a:	4618      	mov	r0, r3
- 800b40c:	3710      	adds	r7, #16
- 800b40e:	46bd      	mov	sp, r7
- 800b410:	bd80      	pop	{r7, pc}
- 800b412:	bf00      	nop
- 800b414:	20009374 	.word	0x20009374
-
-0800b418 <queue_print>:
-  void queue_print(char* data, int size){
- 800b418:	b580      	push	{r7, lr}
- 800b41a:	b082      	sub	sp, #8
- 800b41c:	af00      	add	r7, sp, #0
- 800b41e:	6078      	str	r0, [r7, #4]
- 800b420:	6039      	str	r1, [r7, #0]
-	  if(xSemaphoreTake(mutex_usb, portMAX_DELAY)==pdTRUE){
- 800b422:	4b0e      	ldr	r3, [pc, #56]	; (800b45c <queue_print+0x44>)
- 800b424:	681b      	ldr	r3, [r3, #0]
- 800b426:	f04f 31ff 	mov.w	r1, #4294967295
- 800b42a:	4618      	mov	r0, r3
- 800b42c:	f7fc fbf4 	bl	8007c18 <xQueueSemaphoreTake>
- 800b430:	4603      	mov	r3, r0
- 800b432:	2b01      	cmp	r3, #1
- 800b434:	d10e      	bne.n	800b454 <queue_print+0x3c>
-		 xMessageBufferSend(xMessageBuffer, data, size, portMAX_DELAY);
- 800b436:	4b0a      	ldr	r3, [pc, #40]	; (800b460 <queue_print+0x48>)
- 800b438:	6818      	ldr	r0, [r3, #0]
- 800b43a:	683a      	ldr	r2, [r7, #0]
- 800b43c:	f04f 33ff 	mov.w	r3, #4294967295
- 800b440:	6879      	ldr	r1, [r7, #4]
- 800b442:	f7fc ff09 	bl	8008258 <xStreamBufferSend>
-		 xSemaphoreGive(mutex_usb);
- 800b446:	4b05      	ldr	r3, [pc, #20]	; (800b45c <queue_print+0x44>)
- 800b448:	6818      	ldr	r0, [r3, #0]
- 800b44a:	2300      	movs	r3, #0
- 800b44c:	2200      	movs	r2, #0
- 800b44e:	2100      	movs	r1, #0
- 800b450:	f7fc f8dc 	bl	800760c <xQueueGenericSend>
-	  }
-  }
- 800b454:	bf00      	nop
- 800b456:	3708      	adds	r7, #8
- 800b458:	46bd      	mov	sp, r7
- 800b45a:	bd80      	pop	{r7, pc}
- 800b45c:	2000937c 	.word	0x2000937c
- 800b460:	20009370 	.word	0x20009370
-
-0800b464 <Print_Task>:
-
-  void Print_Task(void *param){
- 800b464:	b580      	push	{r7, lr}
- 800b466:	f5ad 7d44 	sub.w	sp, sp, #784	; 0x310
- 800b46a:	af00      	add	r7, sp, #0
- 800b46c:	f507 7344 	add.w	r3, r7, #784	; 0x310
- 800b470:	f5a3 7343 	sub.w	r3, r3, #780	; 0x30c
- 800b474:	6018      	str	r0, [r3, #0]
-
-	  char buffer[768];
-	  uint8_t qtd = 0;
- 800b476:	2300      	movs	r3, #0
- 800b478:	f887 330f 	strb.w	r3, [r7, #783]	; 0x30f
-	  while(1){
-		  qtd = xMessageBufferReceive(xMessageBuffer, (void*)buffer, sizeof(buffer),portMAX_DELAY);
- 800b47c:	4b0b      	ldr	r3, [pc, #44]	; (800b4ac <Print_Task+0x48>)
- 800b47e:	6818      	ldr	r0, [r3, #0]
- 800b480:	f107 010c 	add.w	r1, r7, #12
- 800b484:	f04f 33ff 	mov.w	r3, #4294967295
- 800b488:	f44f 7240 	mov.w	r2, #768	; 0x300
- 800b48c:	f7fd f847 	bl	800851e <xStreamBufferReceive>
- 800b490:	4603      	mov	r3, r0
- 800b492:	f887 330f 	strb.w	r3, [r7, #783]	; 0x30f
-		  (void) qtd;
-		  CDC_Transmit_FS((uint8_t*) buffer,qtd);
- 800b496:	f897 330f 	ldrb.w	r3, [r7, #783]	; 0x30f
- 800b49a:	b29a      	uxth	r2, r3
- 800b49c:	f107 030c 	add.w	r3, r7, #12
- 800b4a0:	4611      	mov	r1, r2
- 800b4a2:	4618      	mov	r0, r3
- 800b4a4:	f7ff ff74 	bl	800b390 <CDC_Transmit_FS>
-		  qtd = xMessageBufferReceive(xMessageBuffer, (void*)buffer, sizeof(buffer),portMAX_DELAY);
- 800b4a8:	e7e8      	b.n	800b47c <Print_Task+0x18>
- 800b4aa:	bf00      	nop
- 800b4ac:	20009370 	.word	0x20009370
-
-0800b4b0 <CDC_TransmitCplt_FS>:
-  * @param  Buf: Buffer of data to be received
-  * @param  Len: Number of data received (in bytes)
-  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
-  */
-static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
-{
- 800b4b0:	b580      	push	{r7, lr}
- 800b4b2:	b086      	sub	sp, #24
- 800b4b4:	af00      	add	r7, sp, #0
- 800b4b6:	60f8      	str	r0, [r7, #12]
- 800b4b8:	60b9      	str	r1, [r7, #8]
- 800b4ba:	4613      	mov	r3, r2
- 800b4bc:	71fb      	strb	r3, [r7, #7]
-  uint8_t result = USBD_OK;
- 800b4be:	2300      	movs	r3, #0
- 800b4c0:	75fb      	strb	r3, [r7, #23]
-  /* USER CODE BEGIN 13 */
-  portBASE_TYPE tmp = pdFALSE;
- 800b4c2:	2300      	movs	r3, #0
- 800b4c4:	613b      	str	r3, [r7, #16]
-  UNUSED(Buf);
-  UNUSED(Len);
-  UNUSED(epnum);
-  xSemaphoreGiveFromISR(sem_usb_tx, &tmp);
- 800b4c6:	4b0c      	ldr	r3, [pc, #48]	; (800b4f8 <CDC_TransmitCplt_FS+0x48>)
- 800b4c8:	681b      	ldr	r3, [r3, #0]
- 800b4ca:	f107 0210 	add.w	r2, r7, #16
- 800b4ce:	4611      	mov	r1, r2
- 800b4d0:	4618      	mov	r0, r3
- 800b4d2:	f7fc fa34 	bl	800793e <xQueueGiveFromISR>
-  portYIELD_FROM_ISR(tmp);
- 800b4d6:	693b      	ldr	r3, [r7, #16]
- 800b4d8:	2b00      	cmp	r3, #0
- 800b4da:	d007      	beq.n	800b4ec <CDC_TransmitCplt_FS+0x3c>
- 800b4dc:	4b07      	ldr	r3, [pc, #28]	; (800b4fc <CDC_TransmitCplt_FS+0x4c>)
- 800b4de:	f04f 5280 	mov.w	r2, #268435456	; 0x10000000
- 800b4e2:	601a      	str	r2, [r3, #0]
- 800b4e4:	f3bf 8f4f 	dsb	sy
- 800b4e8:	f3bf 8f6f 	isb	sy
-  /* USER CODE END 13 */
-  return result;
- 800b4ec:	f997 3017 	ldrsb.w	r3, [r7, #23]
+ 800b3f6:	4613      	mov	r3, r2
+ 800b3f8:	71fb      	strb	r3, [r7, #7]
+	uint8_t result = USBD_OK;
+ 800b3fa:	2300      	movs	r3, #0
+ 800b3fc:	75fb      	strb	r3, [r7, #23]
+	/* USER CODE BEGIN 13 */
+	portBASE_TYPE tmp = pdFALSE;
+ 800b3fe:	2300      	movs	r3, #0
+ 800b400:	613b      	str	r3, [r7, #16]
+	UNUSED(Buf);
+	UNUSED(Len);
+	UNUSED(epnum);
+	xSemaphoreGiveFromISR(sem_usb_tx, &tmp);
+ 800b402:	4b0c      	ldr	r3, [pc, #48]	; (800b434 <CDC_TransmitCplt_FS+0x48>)
+ 800b404:	681b      	ldr	r3, [r3, #0]
+ 800b406:	f107 0210 	add.w	r2, r7, #16
+ 800b40a:	4611      	mov	r1, r2
+ 800b40c:	4618      	mov	r0, r3
+ 800b40e:	f7fc fa96 	bl	800793e <xQueueGiveFromISR>
+	portYIELD_FROM_ISR(tmp);
+ 800b412:	693b      	ldr	r3, [r7, #16]
+ 800b414:	2b00      	cmp	r3, #0
+ 800b416:	d007      	beq.n	800b428 <CDC_TransmitCplt_FS+0x3c>
+ 800b418:	4b07      	ldr	r3, [pc, #28]	; (800b438 <CDC_TransmitCplt_FS+0x4c>)
+ 800b41a:	f04f 5280 	mov.w	r2, #268435456	; 0x10000000
+ 800b41e:	601a      	str	r2, [r3, #0]
+ 800b420:	f3bf 8f4f 	dsb	sy
+ 800b424:	f3bf 8f6f 	isb	sy
+	/* USER CODE END 13 */
+	return result;
+ 800b428:	f997 3017 	ldrsb.w	r3, [r7, #23]
 }
- 800b4f0:	4618      	mov	r0, r3
- 800b4f2:	3718      	adds	r7, #24
- 800b4f4:	46bd      	mov	sp, r7
- 800b4f6:	bd80      	pop	{r7, pc}
- 800b4f8:	20009378 	.word	0x20009378
- 800b4fc:	e000ed04 	.word	0xe000ed04
+ 800b42c:	4618      	mov	r0, r3
+ 800b42e:	3718      	adds	r7, #24
+ 800b430:	46bd      	mov	sp, r7
+ 800b432:	bd80      	pop	{r7, pc}
+ 800b434:	20009378 	.word	0x20009378
+ 800b438:	e000ed04 	.word	0xe000ed04
 
-0800b500 <init_usb_rtos_obj>:
+0800b43c <init_usb_rtos_obj>:
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
 volatile uint32_t usb_is_on = 0;
 void Print_Task(void *param);
-void init_usb_rtos_obj(void){
- 800b500:	b580      	push	{r7, lr}
- 800b502:	b082      	sub	sp, #8
- 800b504:	af02      	add	r7, sp, #8
+void init_usb_rtos_obj(void) {
+ 800b43c:	b580      	push	{r7, lr}
+ 800b43e:	b082      	sub	sp, #8
+ 800b440:	af02      	add	r7, sp, #8
 
 	sem_usb_tx = xSemaphoreCreateBinary();
- 800b506:	2203      	movs	r2, #3
- 800b508:	2100      	movs	r1, #0
- 800b50a:	2001      	movs	r0, #1
- 800b50c:	f7fb ffee 	bl	80074ec <xQueueGenericCreate>
- 800b510:	4603      	mov	r3, r0
- 800b512:	4a15      	ldr	r2, [pc, #84]	; (800b568 <init_usb_rtos_obj+0x68>)
- 800b514:	6013      	str	r3, [r2, #0]
+ 800b442:	2203      	movs	r2, #3
+ 800b444:	2100      	movs	r1, #0
+ 800b446:	2001      	movs	r0, #1
+ 800b448:	f7fc f850 	bl	80074ec <xQueueGenericCreate>
+ 800b44c:	4603      	mov	r3, r0
+ 800b44e:	4a15      	ldr	r2, [pc, #84]	; (800b4a4 <init_usb_rtos_obj+0x68>)
+ 800b450:	6013      	str	r3, [r2, #0]
 	mutex_usb = xSemaphoreCreateMutex();
- 800b516:	2001      	movs	r0, #1
- 800b518:	f7fc f85f 	bl	80075da <xQueueCreateMutex>
- 800b51c:	4603      	mov	r3, r0
- 800b51e:	4a13      	ldr	r2, [pc, #76]	; (800b56c <init_usb_rtos_obj+0x6c>)
- 800b520:	6013      	str	r3, [r2, #0]
+ 800b452:	2001      	movs	r0, #1
+ 800b454:	f7fc f8c1 	bl	80075da <xQueueCreateMutex>
+ 800b458:	4603      	mov	r3, r0
+ 800b45a:	4a13      	ldr	r2, [pc, #76]	; (800b4a8 <init_usb_rtos_obj+0x6c>)
+ 800b45c:	6013      	str	r3, [r2, #0]
 	xMessageBuffer = xMessageBufferCreate(768);
- 800b522:	2201      	movs	r2, #1
- 800b524:	2100      	movs	r1, #0
- 800b526:	f44f 7040 	mov.w	r0, #768	; 0x300
- 800b52a:	f7fc fe07 	bl	800813c <xStreamBufferGenericCreate>
- 800b52e:	4603      	mov	r3, r0
- 800b530:	4a0f      	ldr	r2, [pc, #60]	; (800b570 <init_usb_rtos_obj+0x70>)
- 800b532:	6013      	str	r3, [r2, #0]
+ 800b45e:	2201      	movs	r2, #1
+ 800b460:	2100      	movs	r1, #0
+ 800b462:	f44f 7040 	mov.w	r0, #768	; 0x300
+ 800b466:	f7fc fe69 	bl	800813c <xStreamBufferGenericCreate>
+ 800b46a:	4603      	mov	r3, r0
+ 800b46c:	4a0f      	ldr	r2, [pc, #60]	; (800b4ac <init_usb_rtos_obj+0x70>)
+ 800b46e:	6013      	str	r3, [r2, #0]
 	rMessageBuffer = xMessageBufferCreate(768);
- 800b534:	2201      	movs	r2, #1
- 800b536:	2100      	movs	r1, #0
- 800b538:	f44f 7040 	mov.w	r0, #768	; 0x300
- 800b53c:	f7fc fdfe 	bl	800813c <xStreamBufferGenericCreate>
- 800b540:	4603      	mov	r3, r0
- 800b542:	4a0c      	ldr	r2, [pc, #48]	; (800b574 <init_usb_rtos_obj+0x74>)
- 800b544:	6013      	str	r3, [r2, #0]
+ 800b470:	2201      	movs	r2, #1
+ 800b472:	2100      	movs	r1, #0
+ 800b474:	f44f 7040 	mov.w	r0, #768	; 0x300
+ 800b478:	f7fc fe60 	bl	800813c <xStreamBufferGenericCreate>
+ 800b47c:	4603      	mov	r3, r0
+ 800b47e:	4a0c      	ldr	r2, [pc, #48]	; (800b4b0 <init_usb_rtos_obj+0x74>)
+ 800b480:	6013      	str	r3, [r2, #0]
 	xTaskCreate(Print_Task, "print Task", 768, NULL, 1, NULL);
- 800b546:	2300      	movs	r3, #0
- 800b548:	9301      	str	r3, [sp, #4]
- 800b54a:	2301      	movs	r3, #1
- 800b54c:	9300      	str	r3, [sp, #0]
- 800b54e:	2300      	movs	r3, #0
- 800b550:	f44f 7240 	mov.w	r2, #768	; 0x300
- 800b554:	4908      	ldr	r1, [pc, #32]	; (800b578 <init_usb_rtos_obj+0x78>)
- 800b556:	4809      	ldr	r0, [pc, #36]	; (800b57c <init_usb_rtos_obj+0x7c>)
- 800b558:	f7fd fa44 	bl	80089e4 <xTaskCreate>
+ 800b482:	2300      	movs	r3, #0
+ 800b484:	9301      	str	r3, [sp, #4]
+ 800b486:	2301      	movs	r3, #1
+ 800b488:	9300      	str	r3, [sp, #0]
+ 800b48a:	2300      	movs	r3, #0
+ 800b48c:	f44f 7240 	mov.w	r2, #768	; 0x300
+ 800b490:	4908      	ldr	r1, [pc, #32]	; (800b4b4 <init_usb_rtos_obj+0x78>)
+ 800b492:	4809      	ldr	r0, [pc, #36]	; (800b4b8 <init_usb_rtos_obj+0x7c>)
+ 800b494:	f7fd faa6 	bl	80089e4 <xTaskCreate>
 	usb_is_on = 1;
- 800b55c:	4b08      	ldr	r3, [pc, #32]	; (800b580 <init_usb_rtos_obj+0x80>)
- 800b55e:	2201      	movs	r2, #1
- 800b560:	601a      	str	r2, [r3, #0]
+ 800b498:	4b08      	ldr	r3, [pc, #32]	; (800b4bc <init_usb_rtos_obj+0x80>)
+ 800b49a:	2201      	movs	r2, #1
+ 800b49c:	601a      	str	r2, [r3, #0]
 }
- 800b562:	bf00      	nop
- 800b564:	46bd      	mov	sp, r7
- 800b566:	bd80      	pop	{r7, pc}
- 800b568:	20009378 	.word	0x20009378
- 800b56c:	2000937c 	.word	0x2000937c
- 800b570:	20009370 	.word	0x20009370
- 800b574:	20009374 	.word	0x20009374
- 800b578:	0800ca9c 	.word	0x0800ca9c
- 800b57c:	0800b465 	.word	0x0800b465
- 800b580:	2000a380 	.word	0x2000a380
+ 800b49e:	bf00      	nop
+ 800b4a0:	46bd      	mov	sp, r7
+ 800b4a2:	bd80      	pop	{r7, pc}
+ 800b4a4:	20009378 	.word	0x20009378
+ 800b4a8:	2000937c 	.word	0x2000937c
+ 800b4ac:	20009370 	.word	0x20009370
+ 800b4b0:	20009374 	.word	0x20009374
+ 800b4b4:	0800ca9c 	.word	0x0800ca9c
+ 800b4b8:	0800b539 	.word	0x0800b539
+ 800b4bc:	2000a380 	.word	0x2000a380
+
+0800b4c0 <CDC_Receiveq_FS>:
+
+uint32_t is_usb_on(void) {
+	return usb_is_on;
+}
+
+BaseType_t CDC_Receiveq_FS(char *data, int size, TickType_t timeout) {
+ 800b4c0:	b580      	push	{r7, lr}
+ 800b4c2:	b084      	sub	sp, #16
+ 800b4c4:	af00      	add	r7, sp, #0
+ 800b4c6:	60f8      	str	r0, [r7, #12]
+ 800b4c8:	60b9      	str	r1, [r7, #8]
+ 800b4ca:	607a      	str	r2, [r7, #4]
+	return xMessageBufferReceive(rMessageBuffer, (void* )data, size,
+ 800b4cc:	4b06      	ldr	r3, [pc, #24]	; (800b4e8 <CDC_Receiveq_FS+0x28>)
+ 800b4ce:	6818      	ldr	r0, [r3, #0]
+ 800b4d0:	68ba      	ldr	r2, [r7, #8]
+ 800b4d2:	f04f 33ff 	mov.w	r3, #4294967295
+ 800b4d6:	68f9      	ldr	r1, [r7, #12]
+ 800b4d8:	f7fd f821 	bl	800851e <xStreamBufferReceive>
+ 800b4dc:	4603      	mov	r3, r0
+			portMAX_DELAY);
+
+}
+ 800b4de:	4618      	mov	r0, r3
+ 800b4e0:	3710      	adds	r7, #16
+ 800b4e2:	46bd      	mov	sp, r7
+ 800b4e4:	bd80      	pop	{r7, pc}
+ 800b4e6:	bf00      	nop
+ 800b4e8:	20009374 	.word	0x20009374
+
+0800b4ec <queue_print>:
+void queue_print(char *data, int size) {
+ 800b4ec:	b580      	push	{r7, lr}
+ 800b4ee:	b082      	sub	sp, #8
+ 800b4f0:	af00      	add	r7, sp, #0
+ 800b4f2:	6078      	str	r0, [r7, #4]
+ 800b4f4:	6039      	str	r1, [r7, #0]
+	if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE) {
+ 800b4f6:	4b0e      	ldr	r3, [pc, #56]	; (800b530 <queue_print+0x44>)
+ 800b4f8:	681b      	ldr	r3, [r3, #0]
+ 800b4fa:	f04f 31ff 	mov.w	r1, #4294967295
+ 800b4fe:	4618      	mov	r0, r3
+ 800b500:	f7fc fb8a 	bl	8007c18 <xQueueSemaphoreTake>
+ 800b504:	4603      	mov	r3, r0
+ 800b506:	2b01      	cmp	r3, #1
+ 800b508:	d10e      	bne.n	800b528 <queue_print+0x3c>
+		xMessageBufferSend(xMessageBuffer, data, size, portMAX_DELAY);
+ 800b50a:	4b0a      	ldr	r3, [pc, #40]	; (800b534 <queue_print+0x48>)
+ 800b50c:	6818      	ldr	r0, [r3, #0]
+ 800b50e:	683a      	ldr	r2, [r7, #0]
+ 800b510:	f04f 33ff 	mov.w	r3, #4294967295
+ 800b514:	6879      	ldr	r1, [r7, #4]
+ 800b516:	f7fc fe9f 	bl	8008258 <xStreamBufferSend>
+		xSemaphoreGive(mutex_usb);
+ 800b51a:	4b05      	ldr	r3, [pc, #20]	; (800b530 <queue_print+0x44>)
+ 800b51c:	6818      	ldr	r0, [r3, #0]
+ 800b51e:	2300      	movs	r3, #0
+ 800b520:	2200      	movs	r2, #0
+ 800b522:	2100      	movs	r1, #0
+ 800b524:	f7fc f872 	bl	800760c <xQueueGenericSend>
+	}
+}
+ 800b528:	bf00      	nop
+ 800b52a:	3708      	adds	r7, #8
+ 800b52c:	46bd      	mov	sp, r7
+ 800b52e:	bd80      	pop	{r7, pc}
+ 800b530:	2000937c 	.word	0x2000937c
+ 800b534:	20009370 	.word	0x20009370
+
+0800b538 <Print_Task>:
+
+void Print_Task(void *param) {
+ 800b538:	b580      	push	{r7, lr}
+ 800b53a:	f5ad 7d44 	sub.w	sp, sp, #784	; 0x310
+ 800b53e:	af00      	add	r7, sp, #0
+ 800b540:	f507 7344 	add.w	r3, r7, #784	; 0x310
+ 800b544:	f5a3 7343 	sub.w	r3, r3, #780	; 0x30c
+ 800b548:	6018      	str	r0, [r3, #0]
+
+	char buffer[768];
+	uint8_t qtd = 0;
+ 800b54a:	2300      	movs	r3, #0
+ 800b54c:	f887 330f 	strb.w	r3, [r7, #783]	; 0x30f
+	while (1) {
+		qtd = xMessageBufferReceive(xMessageBuffer, (void* )buffer,
+ 800b550:	4b0b      	ldr	r3, [pc, #44]	; (800b580 <Print_Task+0x48>)
+ 800b552:	6818      	ldr	r0, [r3, #0]
+ 800b554:	f107 010c 	add.w	r1, r7, #12
+ 800b558:	f04f 33ff 	mov.w	r3, #4294967295
+ 800b55c:	f44f 7240 	mov.w	r2, #768	; 0x300
+ 800b560:	f7fc ffdd 	bl	800851e <xStreamBufferReceive>
+ 800b564:	4603      	mov	r3, r0
+ 800b566:	f887 330f 	strb.w	r3, [r7, #783]	; 0x30f
+				sizeof(buffer), portMAX_DELAY);
+		(void) qtd;
+		CDC_Transmit_FS((uint8_t*) buffer, qtd);
+ 800b56a:	f897 330f 	ldrb.w	r3, [r7, #783]	; 0x30f
+ 800b56e:	b29a      	uxth	r2, r3
+ 800b570:	f107 030c 	add.w	r3, r7, #12
+ 800b574:	4611      	mov	r1, r2
+ 800b576:	4618      	mov	r0, r3
+ 800b578:	f7ff ff0a 	bl	800b390 <CDC_Transmit_FS>
+		qtd = xMessageBufferReceive(xMessageBuffer, (void* )buffer,
+ 800b57c:	e7e8      	b.n	800b550 <Print_Task+0x18>
+ 800b57e:	bf00      	nop
+ 800b580:	20009370 	.word	0x20009370
 
 0800b584 <USBD_FS_DeviceDescriptor>:
   * @param  speed : Current device speed

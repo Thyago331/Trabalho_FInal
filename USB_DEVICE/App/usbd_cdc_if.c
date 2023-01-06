@@ -34,8 +34,7 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-MessageBufferHandle_t xMessageBuffer;
-MessageBufferHandle_t rMessageBuffer;
+
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -53,9 +52,7 @@ MessageBufferHandle_t rMessageBuffer;
  */
 
 /* USER CODE BEGIN PRIVATE_TYPES */
-xSemaphoreHandle sem_usb_tx;
-xSemaphoreHandle mutex_usb;
-QueueHandle_t queue_usb;
+
 /* USER CODE END PRIVATE_TYPES */
 
 /**
@@ -134,15 +131,25 @@ static int8_t CDC_Receive_FS(uint8_t *pbuf, uint32_t *Len);
 static int8_t CDC_TransmitCplt_FS(uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
-
+xSemaphoreHandle sem_usb_tx;
+xSemaphoreHandle mutex_usb;
+MessageBufferHandle_t xMessageBufferRx;
+MessageBufferHandle_t xMessageBufferTx;
+QueueHandle_t	 queue_usb;
 /* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
 
 /**
  * @}
  */
 
-USBD_CDC_ItfTypeDef USBD_Interface_fops_FS = { CDC_Init_FS, CDC_DeInit_FS,
-		CDC_Control_FS, CDC_Receive_FS, CDC_TransmitCplt_FS };
+USBD_CDC_ItfTypeDef USBD_Interface_fops_FS =
+{
+		CDC_Init_FS,
+		CDC_DeInit_FS,
+		CDC_Control_FS,
+		CDC_Receive_FS,
+		CDC_TransmitCplt_FS
+};
 
 /* Private functions ---------------------------------------------------------*/
 /**
@@ -254,22 +261,28 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t *pbuf, uint16_t length) {
  * @param  Len: Number of data received (in bytes)
  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
  */
-/* USER CODE BEGIN 6 */
-void Print_Task(void *param);
-//void queue_print(char* data, int size);
 static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len) {
+/* USER CODE BEGIN 6 */
+
+
 	portBASE_TYPE yield = pdFALSE;
 	USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
 	USBD_CDC_ReceivePacket(&hUsbDeviceFS);
 
 	uint32_t len = *Len;
-	xMessageBufferSendFromISR(rMessageBuffer, Buf, len, &yield);
+	while(len){
+//	xMessageBufferTxSendFromISR(xMessageBufferRx, Buf, len, &yield);
+
+	xMessageBufferSendFromISR(xMessageBufferRx, Buf++, *Len,  &yield );
+	len--;
+	}
+
 	portYIELD_FROM_ISR(yield);
+
 	return (USBD_OK);
-}
 /* USER CODE END 6
  * */
-
+}
 /**
  * @brief  CDC_Transmit_FS
  *         Data to send over USB IN endpoint are sent over CDC interface
@@ -281,12 +294,12 @@ static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len) {
  * @param  Len: Number of data to be sent (in bytes)
  * @retval USBD_OK if all operations are OK else USBD_FAIL or USBD_BUSY
  */
-uint8_t CDC_Transmit_FS(uint8_t *Buf, uint16_t Len) {
+uint8_t CDC_Transmit_FS(uint8_t *Buf, uint16_t Len)
+{
 	uint8_t result = USBD_OK;
 	/* USER CODE BEGIN 7 */
 	//if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE){
-	USBD_CDC_HandleTypeDef *hcdc =
-			(USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData;
+	USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData;
 	if (hcdc->TxState != 0) {
 		//	xSemaphoreGive(mutex_usb);
 		return USBD_BUSY;
@@ -326,14 +339,13 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
 volatile uint32_t usb_is_on = 0;
-void Print_Task(void *param);
 void init_usb_rtos_obj(void) {
 
 	sem_usb_tx = xSemaphoreCreateBinary();
 	mutex_usb = xSemaphoreCreateMutex();
-	xMessageBuffer = xMessageBufferCreate(768);
-	rMessageBuffer = xMessageBufferCreate(768);
-	xTaskCreate(Print_Task, "print Task", 768, NULL, 1, NULL);
+	queue_usb = xQueueCreate(768, sizeof(char));
+	xMessageBufferTx = xMessageBufferCreate(768);
+	xMessageBufferRx = xMessageBufferCreate(768);
 	usb_is_on = 1;
 }
 
@@ -341,28 +353,51 @@ uint32_t is_usb_on(void) {
 	return usb_is_on;
 }
 
-BaseType_t CDC_Receiveq_FS(char *data, int size, TickType_t timeout) {
-	return xMessageBufferReceive(rMessageBuffer, (void* )data, size,
-			portMAX_DELAY);
-
+//BaseType_t CDC_Receiveq_FS(char *data, int size, TickType_t timeout) {
+//	return xMessageBufferTxReceive(xMessageBufferRx, (void* )data, size,
+//			portMAX_DELAY);
+//
+//}
+//BaseType_t CDC_Receivem_FS(uint8_t *data, TickType_t timeout){
+//	return xMessageBufferTxReceive(xMessageBufferRx, data, 128, timeout);;
+//}
+BaseType_t CDC_Receiveq_FS(uint8_t *data, TickType_t timeout){
+	return xQueueReceive(queue_usb, data, timeout);
 }
-void queue_print(char *data, int size) {
-	if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE) {
-		xMessageBufferSend(xMessageBuffer, data, size, portMAX_DELAY);
+
+BaseType_t CDC_Receivem_FS(uint8_t *data, TickType_t timeout){
+	return xMessageBufferReceive(xMessageBufferRx, data, 128, timeout);;
+}
+//void queue_print(char *data, int size) {
+//	if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE) {
+//		xMessageBufferTxSend(xMessageBufferTx, data, size, portMAX_DELAY);
+//		xSemaphoreGive(mutex_usb);
+//	}
+//}
+
+void queue_print(uint8_t *data, uint16_t len){
+	//taskENTER_CRITICAL();
+	if (xSemaphoreTake(mutex_usb, portMAX_DELAY) == pdTRUE){
+		xMessageBufferSend(xMessageBufferTx, data, len, 0);
 		xSemaphoreGive(mutex_usb);
 	}
+	//taskEXIT_CRITICAL();
 }
-
-void Print_Task(void *param) {
-
-	char buffer[768];
-	uint8_t qtd = 0;
-	while (1) {
-		qtd = xMessageBufferReceive(xMessageBuffer, (void* )buffer,
-				sizeof(buffer), portMAX_DELAY);
-		(void) qtd;
-		CDC_Transmit_FS((uint8_t*) buffer, qtd);
-	}
+//void Print_Task(void *param) {
+//
+//	char buffer[768];
+//	uint8_t qtd = 0;
+//	while (1) {
+//		qtd = xMessageBufferTxReceive(xMessageBufferTx, (void* )buffer,
+//				sizeof(buffer), portMAX_DELAY);
+//		(void) qtd;
+//		CDC_Transmit_FS((uint8_t*) buffer, qtd);
+//	}
+//}
+void Print_Task(uint8_t *data){
+	uint16_t len;
+	len = xMessageBufferReceive(xMessageBufferTx, data, 512, portMAX_DELAY);
+	CDC_Transmit_FS(data, len);
 }
 //BaseType_t CDC_Receiveq_FS(char *data, TickType_t timeout){
 //return xQueueReceive(queue_usb, data, timeout);

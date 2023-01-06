@@ -30,7 +30,12 @@
 #include "usbd_cdc.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "FreeRTOS.h"
+ BaseType_t CDC_Receiveq_FS(uint8_t *data, TickType_t timeout);
+ BaseType_t CDC_Receivem_FS(uint8_t *data, TickType_t timeout);
+ void Print_Task(uint8_t *data);
+ void add_to_buffer(uint8_t *data, uint16_t len);
+// void queue_print(char* data, int size);
 /* USER CODE END INCLUDE */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -107,8 +112,9 @@ extern USBD_CDC_ItfTypeDef USBD_Interface_fops_FS;
 
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 
+
 /* USER CODE BEGIN EXPORTED_FUNCTIONS */
-void queue_print(char* data, int size);
+
 /* USER CODE END EXPORTED_FUNCTIONS */
 
 /**
